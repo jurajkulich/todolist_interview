@@ -1,0 +1,61 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
+import "google/api/annotations.proto";
+
+
+//option go_package = "github.com/yuro8/todolist/protos";
+
+// protoc -Iapi -I/home/juraj/Documents/Programming/backend/apis/googleapis --go_out=plugins=grpc,paths=source_relative:./gen/go api/todoitem.proto
+// protoc -Iapi -I/home/juraj/Documents/Programming/backend/apis/googleapis --grpc-gateway_out=plugins=grpc,paths=source_relative:./gen/go api/todoitem.proto
+
+message TodoItem {
+  string id = 1;
+  string title = 2;
+  string description = 3;
+  enum Done {
+    UNDEFINED = 0;
+    DONE = 1;
+    UNDONE = 2;
+  }
+  Done done = 4;
+  google.protobuf.Timestamp last_updated = 5;
+}
+
+message TodoItemList {
+  repeated TodoItem todolist = 1;
+}
+
+service TodoService {
+  rpc CreateTodoItem (TodoItem) returns (TodoItem) {
+    option (google.api.http) = {
+      post: "/v1/todolist/create"
+      body: "*"
+    };
+  }
+  rpc UpdateTodoItem (TodoItem) returns (TodoItem) {
+    option (google.api.http) = {
+      post: "/v1/todolist/update"
+      body: "*"
+    };
+  }
+  rpc DeleteTodoItem (TodoItem) returns (TodoItem) {
+    option (google.api.http) = {
+      post: "/v1/todolist/delete"
+      body: "*"
+    };
+  }
+  rpc GetTodoItem (TodoItem) returns (TodoItem) {
+    option (google.api.http) = {
+      post: "/v1/todolist/get"
+      body: "*"
+    };
+  }
+  rpc ListTodoItems (google.protobuf.Empty) returns (TodoItemList) {
+    option (google.api.http) = {
+      get: "/v1/todolist/list"
+//      body: "*"
+    };
+  }
+}
